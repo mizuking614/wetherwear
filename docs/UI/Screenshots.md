@@ -1,2 +1,0 @@
-c:\Users\mizukiharada\OneDrive - OUMail (Osaka University)\画像\スクリーンショット\スクリーンショット 2026-02-28 145322.png
-c:\Users\mizukiharada\OneDrive - OUMail (Osaka University)\画像\スクリーンショット\スクリーンショット 2026-02-28 145333.png
