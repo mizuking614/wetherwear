@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>WeTheWear - 設定</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-dark: #0f1117;
+            --bg-card: #1a1d27;
+            --bg-card2: #20243a;
+            --accent-blue: #4f8ef7;
+            --accent-cyan: #38d9c0;
+            --accent-warn: #f7a23e;
+            --accent-green: #4ecb71;
+            --accent-red: #f76f6f;
+            --text-primary: #f0f2ff;
+            --text-secondary: #8b93b8;
+            --text-muted: #555e80;
+            --border: rgba(255, 255, 255, 0.07);
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
+        }
+
+        body {
+            background: var(--bg-dark);
+            font-family: 'Noto Sans JP', 'Outfit', sans-serif;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0;
+        }
+
+        /* ===== PHONE FRAME ===== */
+        .phone-wrap {
+            width: 390px;
+            min-height: 844px;
+            background: var(--bg-dark);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+        }
+
+        /* Gradient background blobs */
+        .phone-wrap::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            left: -60px;
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(79, 142, 247, 0.14) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .phone-wrap::after {
+            content: '';
+            position: absolute;
+            top: 200px;
+            right: -80px;
+            width: 260px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(56, 217, 192, 0.10) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .screen {
+            position: relative;
+            z-index: 1;
+            padding: 16px 20px 110px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+        }
+
+        /* ===== STATUS BAR ===== */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 4px 4px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        .status-bar .time {
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .status-icons span {
+            font-size: 14px;
+        }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 0 0;
+        }
+
+        .page-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .page-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ===== PROFILE CARD ===== */
+        .profile-card {
+            background: linear-gradient(135deg, #1c2a4a 0%, #162038 100%);
+            border: 1px solid rgba(79, 142, 247, 0.22);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::after {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 140px;
+            height: 140px;
+            background: radial-gradient(circle, rgba(79, 142, 247, 0.18) 0%, transparent 70%);
+        }
+
+        .avatar {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f8ef7, #38d9c0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 16px rgba(79, 142, 247, 0.35);
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .profile-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 6px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: rgba(79, 142, 247, 0.18);
+            border: 1px solid rgba(79, 142, 247, 0.3);
+            font-size: 11px;
+            color: var(--accent-blue);
+            font-weight: 500;
+        }
+
+        /* ===== SECTION TITLE ===== */
+        .section-title {
+            font-size: 11px;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 2px;
+        }
+
+        /* ===== BODY SENSE SELECTOR ===== */
+        .sense-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+        }
+
+        .sense-card .section-title {
+            margin-bottom: 14px;
+        }
+
+        .sense-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sense-btn {
+            flex: 1;
+            padding: 14px 8px;
+            border-radius: var(--radius-md);
+            background: var(--bg-card2);
+            border: 1.5px solid var(--border);
+            color: var(--text-muted);
+            font-size: 13px;
+            font-family: 'Noto Sans JP', sans-serif;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.22s;
+        }
+
+        .sense-btn span:first-child {
+            font-size: 26px;
+        }
+
+        .sense-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--text-secondary);
+        }
+
+        .sense-btn.active {
+            background: linear-gradient(135deg, rgba(79, 142, 247, 0.18) 0%, rgba(56, 217, 192, 0.10) 100%);
+            border-color: var(--accent-blue);
+            color: var(--text-primary);
+        }
+
+        .sense-btn.active .sense-check {
+            opacity: 1;
+        }
+
+        .sense-check {
+            opacity: 0;
+            font-size: 10px;
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        /* ===== TOGGLE ROWS ===== */
+        .toggle-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .toggle-card .section-title {
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+
+        .toggle-row:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-row:hover {
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        .toggle-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toggle-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .toggle-icon.green {
+            background: rgba(78, 203, 113, 0.14);
+        }
+
+        .toggle-icon.yellow {
+            background: rgba(247, 162, 62, 0.14);
+        }
+
+        .toggle-icon.blue {
+            background: rgba(79, 142, 247, 0.14);
+        }
+
+        .toggle-icon.red {
+            background: rgba(247, 111, 111, 0.14);
+        }
+
+        .toggle-text {}
+
+        .toggle-label {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .toggle-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ===== CUSTOM TOGGLE SWITCH ===== */
+        .switch {
+            position: relative;
+            width: 48px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            background: #2a2e42;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: background 0.25s;
+        }
+
+        .slider::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4a4f6a;
+            top: 50%;
+            left: 4px;
+            transform: translateY(-50%);
+            transition: all 0.25s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .switch input:checked+.slider {
+            background: linear-gradient(135deg, #4f8ef7, #38d9c0);
+            border-color: transparent;
+        }
+
+        .switch input:checked+.slider::before {
+            background: #fff;
+            left: 24px;
+        }
+
+        /* ===== SCHEDULE INPUT ===== */
+        .schedule-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .schedule-card .section-title {
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .schedule-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .schedule-row:last-child {
+            border-bottom: none;
+        }
+
+        .schedule-label-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .schedule-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .schedule-dot.morning {
+            background: #f7a23e;
+        }
+
+        .schedule-dot.noon {
+            background: #4f8ef7;
+        }
+
+        .schedule-dot.evening {
+            background: #7c74f7;
+        }
+
+        .schedule-name {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .time-input {
+            background: var(--bg-card2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 15px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            width: 120px;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .time-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        /* ===== DATA / MISC LINKS ===== */
+        .link-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .link-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .link-row:last-child {
+            border-bottom: none;
+        }
+
+        .link-row:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .link-row-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .link-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .link-icon.purple {
+            background: rgba(124, 116, 247, 0.14);
+        }
+
+        .link-icon.gray {
+            background: rgba(139, 147, 184, 0.12);
+        }
+
+        .link-icon.red {
+            background: rgba(247, 111, 111, 0.12);
+        }
+
+        .link-label {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .link-arrow {
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+
+        /* ===== SAVE BUTTON ===== */
+        .save-btn {
+            background: linear-gradient(135deg, #4f8ef7 0%, #38d9c0 100%);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            width: 100%;
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            font-family: 'Noto Sans JP', sans-serif;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: opacity 0.2s, transform 0.1s;
+            box-shadow: 0 6px 24px rgba(79, 142, 247, 0.35);
+        }
+
+        .save-btn:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+        }
+
+        .save-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ===== VERSION TAG ===== */
+        .version-tag {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            padding: 4px 0 8px;
+        }
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 390px;
+            background: rgba(15, 17, 23, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0 20px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            font-size: 10px;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 4px 20px;
+        }
+
+        .nav-item.active {
+            color: var(--accent-blue);
+        }
+
+        .nav-item span:first-child {
+            font-size: 22px;
+        }
+
+        /* ===== TOAST (saved) ===== */
+        .toast {
+            position: fixed;
+            bottom: 92px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: linear-gradient(135deg, #4f8ef7, #38d9c0);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+            z-index: 200;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="phone-wrap">
+
+        <div class="screen">
+            <!-- ステータスバー -->
+            <div class="status-bar">
+                <span class="time">14:08</span>
+                <div class="status-icons">
+                    <span>📶</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <!-- ページヘッダー -->
+            <div class="page-header">
+                <div>
+                    <div class="page-title">⚙️ 設定</div>
+                    <div class="page-subtitle">あなただけの服装アドバイスにカスタマイズ</div>
+                </div>
+            </div>
+
+            <!-- プロフィールカード -->
+            <div class="profile-card">
+                <div class="avatar">🧑</div>
+                <div class="profile-info">
+                    <div class="profile-name">マイプロフィール</div>
+                    <div class="profile-badge">✦ パーソナライズ済み</div>
+                </div>
+            </div>
+
+            <!-- 体感温度の基本設定 -->
+            <div class="sense-card">
+                <div class="section-title">🌡️ 体感温度の基本設定</div>
+                <div class="sense-options">
+                    <div class="sense-btn" onclick="selectSense(this)">
+                        <span>🥵</span>
+                        <span>暑がり</span>
+                        <span class="sense-check">✓ 選択中</span>
+                    </div>
+                    <div class="sense-btn active" onclick="selectSense(this)">
+                        <span>😊</span>
+                        <span>標準</span>
+                        <span class="sense-check">✓ 選択中</span>
+                    </div>
+                    <div class="sense-btn" onclick="selectSense(this)">
+                        <span>🥶</span>
+                        <span>寒がり</span>
+                        <span class="sense-check">✓ 選択中</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- コンディション設定 -->
+            <div class="toggle-card">
+                <div class="section-title">💊 コンディション設定</div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <div class="toggle-icon green">🌸</div>
+                        <div class="toggle-text">
+                            <div class="toggle-label">花粉症モード</div>
+                            <div class="toggle-desc">花粉の多い日にマスク・眼鏡を提案</div>
+                        </div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="pollen" checked onchange="handleToggle()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <div class="toggle-icon yellow">🌂</div>
+                        <div class="toggle-text">
+                            <div class="toggle-label">冷え込みアラート</div>
+                            <div class="toggle-desc">帰宅時の気温差が大きい場合に通知</div>
+                        </div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="alert" checked onchange="handleToggle()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <div class="toggle-icon blue">🧘</div>
+                        <div class="toggle-text">
+                            <div class="toggle-label">体調補正モード</div>
+                            <div class="toggle-desc">体調が悪い日は厚着を推奨</div>
+                        </div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="health" onchange="handleToggle()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 行動スケジュール -->
+            <div class="schedule-card">
+                <div class="section-title">🕐 行動スケジュール</div>
+                <div class="schedule-row">
+                    <div class="schedule-label-wrap">
+                        <div class="schedule-dot morning"></div>
+                        <div class="schedule-name">🌅 出発時刻</div>
+                    </div>
+                    <input type="time" class="time-input" value="08:00">
+                </div>
+                <div class="schedule-row">
+                    <div class="schedule-label-wrap">
+                        <div class="schedule-dot noon"></div>
+                        <div class="schedule-name">☀️ 昼休み</div>
+                    </div>
+                    <input type="time" class="time-input" value="12:00">
+                </div>
+                <div class="schedule-row">
+                    <div class="schedule-label-wrap">
+                        <div class="schedule-dot evening"></div>
+                        <div class="schedule-name">🌆 帰宅時刻</div>
+                    </div>
+                    <input type="time" class="time-input" value="19:00">
+                </div>
+            </div>
+
+            <!-- その他・データ -->
+            <div class="link-card">
+                <div class="link-row">
+                    <div class="link-row-left">
+                        <div class="link-icon purple">📊</div>
+                        <div class="link-label">フィードバック履歴</div>
+                    </div>
+                    <span class="link-arrow">›</span>
+                </div>
+                <div class="link-row">
+                    <div class="link-row-left">
+                        <div class="link-icon gray">📋</div>
+                        <div class="link-label">利用規約 / プライバシー</div>
+                    </div>
+                    <span class="link-arrow">›</span>
+                </div>
+                <div class="link-row">
+                    <div class="link-row-left">
+                        <div class="link-icon red">🗑️</div>
+                        <div class="link-label" style="color: var(--accent-red);">設定をリセット</div>
+                    </div>
+                    <span class="link-arrow">›</span>
+                </div>
+            </div>
+
+            <!-- 保存ボタン -->
+            <button class="save-btn" onclick="showToast()">
+                <span>✓</span> 設定を保存
+            </button>
+
+            <!-- バージョン -->
+            <div class="version-tag">WeTheWear v0.1.0</div>
+
+        </div><!-- /screen -->
+
+        <!-- ボトムナビ -->
+        <div class="bottom-nav">
+            <div class="nav-item"><span>🏠</span>ホーム</div>
+            <div class="nav-item"><span>📊</span>履歴</div>
+            <div class="nav-item active"><span>⚙️</span>設定</div>
+        </div>
+
+        <!-- トースト通知 -->
+        <div class="toast" id="toast">✓ 設定を保存しました</div>
+
+    </div><!-- /phone-wrap -->
+
+    <script>
+        function selectSense(el) {
+            document.querySelectorAll('.sense-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        function handleToggle() {
+            // placeholder for future state binding
+        }
+
+        function showToast() {
+            const t = document.getElementById('toast');
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2200);
+        }
+    </script>
+</body>
+
+</html>

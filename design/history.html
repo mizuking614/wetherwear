@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>WeTheWear - 履歴</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-dark: #0f1117;
+            --bg-card: #1a1d27;
+            --bg-card2: #20243a;
+            --accent-blue: #4f8ef7;
+            --accent-cyan: #38d9c0;
+            --accent-warn: #f7a23e;
+            --accent-green: #4ecb71;
+            --accent-red: #f76f6f;
+            --text-primary: #f0f2ff;
+            --text-secondary: #8b93b8;
+            --text-muted: #555e80;
+            --border: rgba(255, 255, 255, 0.07);
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 10px;
+        }
+
+        body {
+            background: var(--bg-dark);
+            font-family: 'Noto Sans JP', 'Outfit', sans-serif;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* ===== PHONE FRAME ===== */
+        .phone-wrap {
+            width: 390px;
+            min-height: 844px;
+            background: var(--bg-dark);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+        }
+
+        .phone-wrap::before {
+            content: '';
+            position: absolute;
+            top: -80px;
+            right: -60px;
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, rgba(56, 217, 192, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .phone-wrap::after {
+            content: '';
+            position: absolute;
+            top: 300px;
+            left: -80px;
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(79, 142, 247, 0.10) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .screen {
+            position: relative;
+            z-index: 1;
+            padding: 16px 20px 110px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            overflow-y: auto;
+        }
+
+        /* ===== STATUS BAR ===== */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 4px 4px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        .status-bar .time {
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            padding: 4px 0 0;
+        }
+
+        .page-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .page-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ===== SECTION TITLE ===== */
+        .section-title {
+            font-size: 11px;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ===== SUMMARY STATS ===== */
+        .summary-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .summary-card {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .summary-card .s-icon {
+            font-size: 20px;
+        }
+
+        .summary-card .s-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .summary-card .s-label {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .summary-card.highlight {
+            background: linear-gradient(135deg, rgba(56, 217, 192, 0.12) 0%, rgba(79, 142, 247, 0.08) 100%);
+            border-color: rgba(56, 217, 192, 0.25);
+        }
+
+        .summary-card.highlight .s-value {
+            color: var(--accent-cyan);
+        }
+
+        /* ===== FEEDBACK PIE / BAR ===== */
+        .fb-breakdown-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+        }
+
+        .fb-breakdown-card .section-title {
+            margin-bottom: 14px;
+        }
+
+        .fb-bar-row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .fb-bar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fb-bar-emoji {
+            font-size: 20px;
+            width: 28px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .fb-bar-wrap {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .fb-bar-fill {
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        .fb-bar-fill.good {
+            background: linear-gradient(90deg, #38d9c0, #4f8ef7);
+        }
+
+        .fb-bar-fill.hot {
+            background: linear-gradient(90deg, #f7a23e, #f76f6f);
+        }
+
+        .fb-bar-fill.cold {
+            background: linear-gradient(90deg, #7ab4ff, #9b7cf7);
+        }
+
+        .fb-bar-count {
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            width: 28px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .fb-bar-pct {
+            font-size: 11px;
+            color: var(--text-muted);
+            width: 32px;
+            flex-shrink: 0;
+        }
+
+        /* ===== MONTH HEADING ===== */
+        .month-heading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 2px;
+        }
+
+        .month-heading-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .month-heading-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .month-heading-count {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ===== HISTORY CARD ===== */
+        .history-group {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+            cursor: default;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* 左カラー帯 */
+        .history-stripe {
+            width: 4px;
+            flex-shrink: 0;
+        }
+
+        .history-stripe.good {
+            background: linear-gradient(180deg, #38d9c0, #4f8ef7);
+        }
+
+        .history-stripe.hot {
+            background: linear-gradient(180deg, #f7a23e, #f76f6f);
+        }
+
+        .history-stripe.cold {
+            background: linear-gradient(180deg, #7ab4ff, #9b7cf7);
+        }
+
+        .history-body {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 16px 13px 14px;
+            flex: 1;
+        }
+
+        /* 日付バッジ */
+        .date-badge {
+            width: 38px;
+            height: 42px;
+            border-radius: 10px;
+            background: var(--bg-card2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .date-badge .db-month {
+            font-size: 8px;
+            color: var(--text-muted);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .date-badge .db-day {
+            font-size: 18px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.1;
+        }
+
+        /* 中央コンテンツ */
+        .history-info {
+            flex: 1;
+        }
+
+        .history-outfit {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .history-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        .meta-pill {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            background: var(--bg-card2);
+            border-radius: 20px;
+            padding: 2px 8px;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* 右フィードバック */
+        .history-fb {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .fb-emoji {
+            font-size: 24px;
+        }
+
+        .fb-label {
+            font-size: 9px;
+            color: var(--text-muted);
+        }
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 390px;
+            background: rgba(15, 17, 23, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0 20px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            font-size: 10px;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 4px 20px;
+        }
+
+        .nav-item.active {
+            color: var(--accent-blue);
+        }
+
+        .nav-item span:first-child {
+            font-size: 22px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="phone-wrap">
+        <div class="screen">
+
+            <!-- ステータスバー -->
+            <div class="status-bar">
+                <span class="time">14:08</span>
+                <div class="status-icons">
+                    <span>📶</span>
+                    <span>🔋</span>
+                </div>
+            </div>
+
+            <!-- ページヘッダー -->
+            <div class="page-header">
+                <div class="page-title">📊 履歴</div>
+                <div class="page-subtitle">過去の服装と体感フィードバック</div>
+            </div>
+
+            <!-- サマリー統計 -->
+            <div class="summary-row">
+                <div class="summary-card">
+                    <div class="s-icon">📅</div>
+                    <div class="s-value">21</div>
+                    <div class="s-label">記録日数</div>
+                </div>
+                <div class="summary-card highlight">
+                    <div class="s-icon">🎯</div>
+                    <div class="s-value">76%</div>
+                    <div class="s-label">Gemini的中率</div>
+                </div>
+                <div class="summary-card">
+                    <div class="s-icon">🔥</div>
+                    <div class="s-value">7</div>
+                    <div class="s-label">連続記録</div>
+                </div>
+            </div>
+
+            <!-- フィードバック内訳 -->
+            <div class="fb-breakdown-card">
+                <div class="section-title">💬 フィードバック内訳</div>
+                <div class="fb-bar-row">
+                    <div class="fb-bar-item">
+                        <div class="fb-bar-emoji">👌</div>
+                        <div class="fb-bar-wrap">
+                            <div class="fb-bar-fill good" style="width: 67%;"></div>
+                        </div>
+                        <div class="fb-bar-count">14</div>
+                        <div class="fb-bar-pct">67%</div>
+                    </div>
+                    <div class="fb-bar-item">
+                        <div class="fb-bar-emoji">🥵</div>
+                        <div class="fb-bar-wrap">
+                            <div class="fb-bar-fill hot" style="width: 19%;"></div>
+                        </div>
+                        <div class="fb-bar-count">4</div>
+                        <div class="fb-bar-pct">19%</div>
+                    </div>
+                    <div class="fb-bar-item">
+                        <div class="fb-bar-emoji">🥶</div>
+                        <div class="fb-bar-wrap">
+                            <div class="fb-bar-fill cold" style="width: 14%;"></div>
+                        </div>
+                        <div class="fb-bar-count">3</div>
+                        <div class="fb-bar-pct">14%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3月 -->
+            <div class="month-heading">
+                <div class="month-heading-text">2026年 3月</div>
+                <div class="month-heading-line"></div>
+                <div class="month-heading-count">2件</div>
+            </div>
+
+            <div class="history-group">
+                <div class="history-item">
+                    <div class="history-stripe good"></div>
+                    <div class="history-body">
+                        <div class="date-badge">
+                            <div class="db-month">MAR</div>
+                            <div class="db-day">2</div>
+                        </div>
+                        <div class="history-info">
+                            <div class="history-outfit">ニット＋中綿ジャケット＋マフラー</div>
+                            <div class="history-meta">
+                                <div class="meta-pill">⛅ 10°C</div>
+                                <div class="meta-pill">💨 5m/s</div>
+                                <div class="meta-pill">🌂 30%</div>
+                            </div>
+                        </div>
+                        <div class="history-fb">
+                            <div class="fb-emoji">👌</div>
+                            <div class="fb-label">ちょうど良い</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="history-item">
+                    <div class="history-stripe good"></div>
+                    <div class="history-body">
+                        <div class="date-badge">
+                            <div class="db-month">MAR</div>
+                            <div class="db-day">1</div>
+                        </div>
+                        <div class="history-info">
+                            <div class="history-outfit">ニット＋中綿ジャケット</div>
+                            <div class="history-meta">
+                                <div class="meta-pill">⛅ 12°C</div>
+                                <div class="meta-pill">💨 4m/s</div>
+                                <div class="meta-pill">💧 62%</div>
+                            </div>
+                        </div>
+                        <div class="history-fb">
+                            <div class="fb-emoji">👌</div>
+                            <div class="fb-label">ちょうど良い</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2月 -->
+            <div class="month-heading">
+                <div class="month-heading-text">2026年 2月</div>
+                <div class="month-heading-line"></div>
+                <div class="month-heading-count">4件</div>
+            </div>
+
+            <div class="history-group">
+                <div class="history-item">
+                    <div class="history-stripe hot"></div>
+                    <div class="history-body">
+                        <div class="date-badge">
+                            <div class="db-month">FEB</div>
+                            <div class="db-day">28</div>
+                        </div>
+                        <div class="history-info">
+                            <div class="history-outfit">薄手コート＋ロンT</div>
+                            <div class="history-meta">
+                                <div class="meta-pill">🌤️ 15°C</div>
+                                <div class="meta-pill">💨 2m/s</div>
+                                <div class="meta-pill">🌂 10%</div>
+                            </div>
+                        </div>
+                        <div class="history-fb">
+                            <div class="fb-emoji">🥵</div>
+                            <div class="fb-label">暑かった</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="history-item">
+                    <div class="history-stripe good"></div>
+                    <div class="history-body">
+                        <div class="date-badge">
+                            <div class="db-month">FEB</div>
+                            <div class="db-day">27</div>
+                        </div>
+                        <div class="history-info">
+                            <div class="history-outfit">ダウンジャケット＋タートル</div>
+                            <div class="history-meta">
+                                <div class="meta-pill">🌧️ 8°C</div>
+                                <div class="meta-pill">💨 6m/s</div>
+                                <div class="meta-pill">🌂 80%</div>
+                            </div>
+                        </div>
+                        <div class="history-fb">
+                            <div class="fb-emoji">👌</div>
+                            <div class="fb-label">ちょうど良い</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="history-item">
+                    <div class="history-stripe cold"></div>
+                    <div class="history-body">
+                        <div class="date-badge">
+                            <div class="db-month">FEB</div>
+                            <div class="db-day">26</div>
+                        </div>
+                        <div class="history-info">
+                            <div class="history-outfit">パーカー＋デニムジャケット</div>
+                            <div class="history-meta">
+                                <div class="meta-pill">⛅ 10°C</div>
+                                <div class="meta-pill">💨 4m/s</div>
+                                <div class="meta-pill">🌂 20%</div>
+                            </div>
+                        </div>
+                        <div class="history-fb">
+                            <div class="fb-emoji">🥶</div>
+                            <div class="fb-label">寒かった</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="history-item">
+                    <div class="history-stripe good"></div>
+                    <div class="history-body">
+                        <div class="date-badge">
+                            <div class="db-month">FEB</div>
+                            <div class="db-day">25</div>
+                        </div>
+                        <div class="history-info">
+                            <div class="history-outfit">ウールコート＋セーター</div>
+                            <div class="history-meta">
+                                <div class="meta-pill">☁️ 7°C</div>
+                                <div class="meta-pill">💨 3m/s</div>
+                                <div class="meta-pill">💧 55%</div>
+                            </div>
+                        </div>
+                        <div class="history-fb">
+                            <div class="fb-emoji">👌</div>
+                            <div class="fb-label">ちょうど良い</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /screen -->
+
+        <!-- ボトムナビ -->
+        <div class="bottom-nav">
+            <div class="nav-item"><span>🏠</span>ホーム</div>
+            <div class="nav-item active"><span>📊</span>履歴</div>
+            <div class="nav-item"><span>⚙️</span>設定</div>
+        </div>
+
+    </div><!-- /phone-wrap -->
+</body>
+
+</html>
