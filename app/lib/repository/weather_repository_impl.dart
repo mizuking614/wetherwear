@@ -1,4 +1,4 @@
-import '../data/models/weather.dart';
+import '../data/models/weather/model.dart';
 import '../data/sources/location_service.dart';
 import '../data/sources/weather_api_client.dart';
 import 'weather_repository.dart';
@@ -10,8 +10,8 @@ class WeatherRepositoryImpl implements WeatherRepository {
   WeatherRepositoryImpl({
     required LocationService locationService,
     required WeatherApiClient apiClient,
-  })  : _locationService = locationService,
-        _apiClient = apiClient;
+  }) : _locationService = locationService,
+       _apiClient = apiClient;
 
   @override
   Future<WeatherData> getWeather() async {

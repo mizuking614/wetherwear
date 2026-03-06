@@ -3,17 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/user_config.dart';
 import '../../ui/settings/settings_view_model.dart';
 
-// ー カラー定数(デザインに合わせたダークテーマ) ー
-const _bgCard = Color(0xFF1a1d27);
-const _bgCard2 = Color(0xFF20243a);
-const _accentBlue = Color(0xFF4f8ef7);
-const _accentCyan = Color(0xFF38d9c0);
-const _accentGreen = Color(0xFF4ecb71);
-const _accentWarn = Color(0xFFf7a23e);
-const _accentRed = Color(0xFFf76f6f);
-const _textSecondary = Color(0xFF8b93b8);
-const _textMuted = Color(0xFF555e80);
-const _borderColor = Color(0x12FFFFFF);
+
 
 class SettingsView extends ConsumerWidget {
   const SettingsView({super.key});

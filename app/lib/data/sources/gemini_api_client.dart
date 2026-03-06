@@ -1,19 +1,19 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
-import '../models/weather.dart';
+import '../models/weather/model.dart';
 import '../models/user_config.dart';
 
 class GeminiApiClient {
   final GenerativeModel _model;
 
   GeminiApiClient({required String apiKey})
-      : _model = GenerativeModel(
-          model: 'gemini-2.0-flash-lite',
-          apiKey: apiKey,
-          generationConfig: GenerationConfig(
-            temperature: 0.7,
-            maxOutputTokens: 300,
-          ),
-        );
+    : _model = GenerativeModel(
+        model: 'gemini-2.0-flash-lite',
+        apiKey: apiKey,
+        generationConfig: GenerationConfig(
+          temperature: 0.7,
+          maxOutputTokens: 300,
+        ),
+      );
 
   /// 気象データとユーザー設定から服装アドバイスを生成する
   Future<String> generateClothingAdvice({
@@ -25,9 +25,7 @@ class GeminiApiClient {
 
     HourlyForecast? forecast(int hour) {
       try {
-        return weather.hourlyForecast.firstWhere(
-          (h) => h.time.hour == hour,
-        );
+        return weather.hourlyForecast.firstWhere((h) => h.time.hour == hour);
       } catch (_) {
         return null;
       }
@@ -36,7 +34,8 @@ class GeminiApiClient {
     final departure = forecast(departureHour);
     final evening = forecast(eveningHour);
 
-    final prompt = '''
+    final prompt =
+        '''
 あなたはパーソナル服装アドバイザーです。以下の情報をもとに、今日の服装を日本語で簡潔にアドバイスしてください（150文字以内）。
 
 【現在の気象】

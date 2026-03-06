@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/feedback_record.dart';
-import '../../data/models/weather.dart';
+import '../../data/models/weather/model.dart';
 import '../../ui/home/home_view_model.dart';
 
 class HomeView extends ConsumerStatefulWidget {
@@ -143,14 +143,14 @@ class _WeatherCard extends StatelessWidget {
                     Text(
                       '${weather.currentTemp.toStringAsFixed(1)}°C',
                       style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text(
                       '体感 ${weather.apparentTemp.toStringAsFixed(1)}°C',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: cs.onSurfaceVariant,
-                          ),
+                        color: cs.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),
@@ -285,10 +285,7 @@ class _FeedbackSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '今日の服装はどうでしたか？',
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
+        Text('今日の服装はどうでしたか？', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -314,7 +311,7 @@ class _FeedbackButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         decoration: BoxDecoration(
           border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
           ),
           borderRadius: BorderRadius.circular(16),
         ),

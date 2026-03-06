@@ -1,84 +1,34 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/models/weather.dart';
-import '../../data/models/feedback_record.dart';
-import '../../providers.dart';
+import 'package:app/repository/weather/repository.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../data/models/weather/model.dart';
 
-class HomeState {
-  final WeatherData? weather;
-  final String? advice;
-  final bool isLoading;
-  final String? error;
+part 'home_view_model.freezed.dart';
+part 'home_view_model.g.dart';
 
-  const HomeState({
-    this.weather,
-    this.advice,
-    this.isLoading = false,
-    this.error,
-  });
-
-  HomeState copyWith({
-    WeatherData? weather,
-    String? advice,
-    bool? isLoading,
-    String? error,
-  }) {
-    return HomeState(
-      weather: weather ?? this.weather,
-      advice: advice ?? this.advice,
-      isLoading: isLoading ?? this.isLoading,
-      error: error,
-    );
-  }
+@freezed
+abstract class HomeState with _$HomeState {
+  const factory HomeState({
+    required WeatherData? weather,
+    required String? advice,
+    required bool isLoading,
+    required String? error,
+  }) = _HomeState;
 }
 
-class HomeViewModel extends Notifier<HomeState> {
+@riverpod
+class HomeViewModel extends _$HomeViewModel {
   @override
-  HomeState build() => const HomeState();
-
-  Future<void> loadWeatherAndAdvice() async {
-    state = state.copyWith(isLoading: true, error: null);
-    try {
-      final weatherRepo = ref.read(weatherRepositoryProvider);
-      final weather = await weatherRepo.getWeather();
-
-      final userRepo = ref.read(userRepositoryProvider);
-      final config = userRepo.loadConfig();
-
-      final adviceRepo = ref.read(clothingAdviceRepositoryProvider);
-      final advice = await adviceRepo.getAdvice(
-        weather: weather,
-        config: config,
-      );
-
-      state = state.copyWith(
-        weather: weather,
-        advice: advice,
-        isLoading: false,
-      );
-    } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
-    }
-  }
-
-  Future<void> submitFeedback(FeedbackType feedback) async {
-    final weather = state.weather;
-    final advice = state.advice;
-    if (weather == null || advice == null) return;
-
-    final record = FeedbackRecord(
-      id: DateTime.now().toIso8601String(),
-      date: DateTime.now(),
-      outfitAdvice: advice,
-      temperature: weather.currentTemp,
-      apparentTemp: weather.apparentTemp,
-      feedback: feedback,
+  Future<HomeState> build() async {
+    final weatherNotifier = ref.read(weatherRepositoryProvider.notifier);
+    await weatherNotifier.fetchWeather(latitude: 35.6895, longitude: 139.6917);
+    // fetchWeather は void を返すので、結果は repository の state から取得する
+    final weather = ref.read(weatherRepositoryProvider);
+    return HomeState(
+      weather: weather,
+      advice: null,
+      isLoading: false,
+      error: null,
     );
-
-    final userRepo = ref.read(userRepositoryProvider);
-    await userRepo.saveFeedbackRecord(record);
   }
 }
-
-final homeViewModelProvider = NotifierProvider<HomeViewModel, HomeState>(
-  HomeViewModel.new,
-);

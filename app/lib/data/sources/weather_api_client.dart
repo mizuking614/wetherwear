@@ -1,23 +1,35 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import '../models/weather.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../repository/dio/repository.dart';
+import '../models/weather/model.dart';
+import '../models/weather/weather_api_response.dart';
+
+part 'weather_api_client.g.dart';
+
+@riverpod
+WeatherApiClient weatherApiClient(Ref ref) {
+  final apiClient = ref.watch(apicliantProvider);
+  return WeatherApiClient(apiClient: apiClient);
+}
 
 /// Open-Meteo API（無料・キー不要）から気象データを取得する
 class WeatherApiClient {
-  static const _baseUrl = 'https://api.open-meteo.com/v1/forecast';
+  static const _endpoint = '/forecast';
 
-  final http.Client _client;
+  final dynamic _apiClient;
 
-  WeatherApiClient({http.Client? client}) : _client = client ?? http.Client();
+  WeatherApiClient({required dynamic apiClient}) : _apiClient = apiClient;
 
   Future<WeatherData> fetchWeather({
     required double latitude,
     required double longitude,
   }) async {
-    final uri = Uri.parse(_baseUrl).replace(
+    final response = await _apiClient.get(
+      _endpoint,
       queryParameters: {
-        'latitude': latitude.toString(),
-        'longitude': longitude.toString(),
+        'latitude': latitude,
+        'longitude': longitude,
         'current': [
           'temperature_2m',
           'apparent_temperature',
@@ -31,43 +43,7 @@ class WeatherApiClient {
       },
     );
 
-    final response = await _client.get(uri);
-    if (response.statusCode != 200) {
-      throw Exception('天気データの取得に失敗しました: ${response.statusCode}');
-    }
-
-    final json = jsonDecode(response.body) as Map<String, dynamic>;
-    return _parse(json);
-  }
-
-  WeatherData _parse(Map<String, dynamic> json) {
-    final current = json['current'] as Map<String, dynamic>;
-    final hourly = json['hourly'] as Map<String, dynamic>;
-
-    final times = (hourly['time'] as List).cast<String>();
-    final apparentTemps = (hourly['apparent_temperature'] as List)
-        .map((e) => (e as num).toDouble())
-        .toList();
-    final codes = (hourly['weather_code'] as List)
-        .map((e) => (e as num).toInt())
-        .toList();
-
-    final forecasts = List.generate(
-      times.length,
-      (i) => HourlyForecast(
-        time: DateTime.parse(times[i]),
-        apparentTemp: apparentTemps[i],
-        weatherCode: codes[i],
-      ),
-    );
-
-    return WeatherData(
-      currentTemp: (current['temperature_2m'] as num).toDouble(),
-      apparentTemp: (current['apparent_temperature'] as num).toDouble(),
-      humidity: (current['relative_humidity_2m'] as num).toDouble(),
-      windSpeed: (current['wind_speed_10m'] as num).toDouble(),
-      weatherCode: (current['weather_code'] as num).toInt(),
-      hourlyForecast: forecasts,
-    );
+    final json = response.data;
+    return WeatherApiResponseDto.fromJson(json).toWeatherData();
   }
 }
