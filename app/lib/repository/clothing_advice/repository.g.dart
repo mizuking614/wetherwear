@@ -6,21 +6,22 @@ part of 'repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$weatherRepositoryHash() => r'08986695a3094f86d35c00390ef665c2c5ec090c';
+String _$clothingAdviceRepositoryHash() =>
+    r'6af05b936ab1d506ea43a0e73dd60ac7d07958c2';
 
-/// See also [WeatherRepository].
-@ProviderFor(WeatherRepository)
-final weatherRepositoryProvider =
-    AutoDisposeNotifierProvider<WeatherRepository, WeatherData?>.internal(
-      WeatherRepository.new,
-      name: r'weatherRepositoryProvider',
+/// See also [ClothingAdviceRepository].
+@ProviderFor(ClothingAdviceRepository)
+final clothingAdviceRepositoryProvider =
+    AutoDisposeNotifierProvider<ClothingAdviceRepository, void>.internal(
+      ClothingAdviceRepository.new,
+      name: r'clothingAdviceRepositoryProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$weatherRepositoryHash,
+          : _$clothingAdviceRepositoryHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$WeatherRepository = AutoDisposeNotifier<WeatherData?>;
+typedef _$ClothingAdviceRepository = AutoDisposeNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

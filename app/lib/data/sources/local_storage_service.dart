@@ -1,7 +1,24 @@
 import 'dart:convert';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/user_config.dart';
+
 import '../models/feedback_record.dart';
+import '../models/user_config.dart';
+
+part 'local_storage_service.g.dart';
+
+@riverpod
+LocalStorageService localStorageService(Ref ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
+  return LocalStorageService(prefs);
+}
+
+// shared_preferences は ProviderScope でオーバーライドして渡す
+@riverpod
+SharedPreferences sharedPreferences(Ref ref) =>
+    throw UnimplementedError('Override in ProviderScope');
 
 class LocalStorageService {
   static const _keyBasePreference = 'base_preference';
@@ -16,10 +33,13 @@ class LocalStorageService {
   // ===== UserConfig =====
 
   UserConfig loadUserConfig() {
+    final raw = _prefs.getString(_keyBasePreference) ?? 'normal';
+    final pref = BodyPreference.values.firstWhere(
+      (e) => e.key == raw,
+      orElse: () => BodyPreference.normal,
+    );
     return UserConfig(
-      basePreference: BodyPreferenceExt.fromKey(
-        _prefs.getString(_keyBasePreference) ?? 'normal',
-      ),
+      basePreference: pref,
       hasPollenAllergy: _prefs.getBool(_keyHasPollenAllergy) ?? false,
       coldAlertEnabled: _prefs.getBool(_keyColdAlertEnabled) ?? true,
     );
@@ -51,7 +71,6 @@ class LocalStorageService {
 
   Future<void> saveFeedbackRecord(FeedbackRecord record) async {
     final records = loadFeedbackRecords();
-    // 同日のレコードがあれば上書き
     final idx = records.indexWhere(
       (r) =>
           r.date.year == record.date.year &&

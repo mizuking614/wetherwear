@@ -1,7 +1,12 @@
-import 'package:app/repository/weather/repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../data/models/feedback_record.dart';
+import '../../data/models/user_config.dart';
 import '../../data/models/weather/model.dart';
+import '../../repository/clothing_advice/repository.dart';
+import '../../repository/user/repository.dart';
+import '../../repository/weather/repository.dart';
 
 part 'home_view_model.freezed.dart';
 part 'home_view_model.g.dart';
@@ -19,16 +24,49 @@ abstract class HomeState with _$HomeState {
 @riverpod
 class HomeViewModel extends _$HomeViewModel {
   @override
-  Future<HomeState> build() async {
-    final weatherNotifier = ref.read(weatherRepositoryProvider.notifier);
-    await weatherNotifier.fetchWeather(latitude: 35.6895, longitude: 139.6917);
-    // fetchWeather は void を返すので、結果は repository の state から取得する
-    final weather = ref.read(weatherRepositoryProvider);
-    return HomeState(
-      weather: weather,
-      advice: null,
-      isLoading: false,
-      error: null,
+  HomeState build() => const HomeState(
+    weather: null,
+    advice: null,
+    isLoading: false,
+    error: null,
+  );
+
+  Future<void> loadWeatherAndAdvice() async {
+    state = state.copyWith(isLoading: true, error: null);
+    try {
+      final weatherNotifier = ref.read(weatherRepositoryProvider.notifier);
+      await weatherNotifier.fetchWeatherFromCurrentLocation();
+      final weather = ref.read(weatherRepositoryProvider);
+      final userConfig = ref.read(userRepositoryProvider);
+
+      final advice = await ref
+          .read(clothingAdviceRepositoryProvider.notifier)
+          .getAdvice(weather: weather!, config: userConfig);
+
+      state = state.copyWith(
+        weather: weather,
+        advice: advice,
+        isLoading: false,
+      );
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+    }
+  }
+
+  Future<void> submitFeedback(FeedbackType type) async {
+    final weather = state.weather;
+    final advice = state.advice;
+    if (weather == null || advice == null) return;
+
+    final record = FeedbackRecord(
+      id: DateTime.now().toIso8601String(),
+      date: DateTime.now(),
+      outfitAdvice: advice,
+      temperature: weather.currentTemp,
+      apparentTemp: weather.apparentTemp,
+      feedback: type,
     );
+
+    await ref.read(userRepositoryProvider.notifier).saveFeedbackRecord(record);
   }
 }

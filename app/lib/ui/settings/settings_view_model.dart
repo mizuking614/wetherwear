@@ -1,58 +1,37 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../../data/models/user_config.dart';
-import '../../providers.dart';
+import '../../repository/user/repository.dart';
 
-class SettingsViewModel extends Notifier<UserConfig> {
+part 'settings_view_model.g.dart';
+
+@riverpod
+class SettingsViewModel extends _$SettingsViewModel {
   @override
-  UserConfig build() {
-    final repo = ref.read(userRepositoryProvider);
-    return repo.loadConfig();
-  }
+  UserConfig build() => ref.read(userRepositoryProvider.notifier).build();
 
-  void setBasePreference(BodyPreference p) {
-    state = state.copyWith(basePreference: p);
-    _save();
-  }
+  void setBasePreference(BodyPreference p) =>
+      ref.read(userRepositoryProvider.notifier).setBasePreference(p);
 
-  void setPollenAllergy(bool v) {
-    state = state.copyWith(hasPollenAllergy: v);
-    _save();
-  }
+  void setPollenAllergy(bool v) =>
+      ref.read(userRepositoryProvider.notifier).setPollenAllergy(v);
 
-  void setColdAlert(bool v) {
-    state = state.copyWith(coldAlertEnabled: v);
-    _save();
-  }
+  void setColdAlert(bool v) =>
+      ref.read(userRepositoryProvider.notifier).setColdAlert(v);
 
-  void setHealthCorrection(bool v) {
-    state = state.copyWith(healthCorrectionEnabled: v);
-    _save();
-  }
+  void setHealthCorrection(bool v) =>
+      ref.read(userRepositoryProvider.notifier).setHealthCorrection(v);
 
-  void setDepartureTime(int hour, int minute) {
-    state = state.copyWith(departureHour: hour, departureMinute: minute);
-  }
+  void setDepartureTime(int hour, int minute) =>
+      ref.read(userRepositoryProvider.notifier).setDepartureTime(hour, minute);
 
-  void setLunchTime(int hour, int minute) {
-    state = state.copyWith(lunchHour: hour, lunchMinute: minute);
-  }
+  void setLunchTime(int hour, int minute) =>
+      ref.read(userRepositoryProvider.notifier).setLunchTime(hour, minute);
 
-  void setReturnTime(int hour, int minute) {
-    state = state.copyWith(returnHour: hour, returnMinute: minute);
-  }
+  void setReturnTime(int hour, int minute) =>
+      ref.read(userRepositoryProvider.notifier).setReturnTime(hour, minute);
 
-  void save() => _save();
+  void save() => ref.read(userRepositoryProvider.notifier).save();
 
-  void resetConfig() {
-    state = const UserConfig();
-    _save();
-  }
-
-  void _save() {
-    final repo = ref.read(userRepositoryProvider);
-    repo.saveConfig(state);
-  }
+  void resetConfig() => ref.read(userRepositoryProvider.notifier).resetConfig();
 }
-
-final settingsViewModelProvider =
-    NotifierProvider<SettingsViewModel, UserConfig>(SettingsViewModel.new);

@@ -1,6 +1,17 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import '../models/weather/model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../models/user_config.dart';
+import '../models/weather/model.dart';
+
+part 'gemini_api_client.g.dart';
+
+@riverpod
+GeminiApiClient geminiApiClient(Ref ref) {
+  const apiKey = String.fromEnvironment('GEMINI_API_KEY', defaultValue: '');
+  return GeminiApiClient(apiKey: apiKey);
+}
 
 class GeminiApiClient {
   final GenerativeModel _model;
@@ -20,8 +31,8 @@ class GeminiApiClient {
     required WeatherData weather,
     required UserConfig config,
   }) async {
-    final departureHour = 8;
-    final eveningHour = 19;
+    const departureHour = 8;
+    const eveningHour = 19;
 
     HourlyForecast? forecast(int hour) {
       try {
@@ -66,7 +77,7 @@ ${weather.needsColdAlert ? '帰宅時の冷え込みについて必ず触れて�
     // }
 
     // ─── モック実装（開発用） ───
-    await Future.delayed(const Duration(milliseconds: 800)); // ローディング演出
+    await Future.delayed(const Duration(milliseconds: 800));
     final temp = weather.currentTemp;
     if (temp >= 28) {
       return '気温${temp.toStringAsFixed(0)}°Cと暑い一日です。半袖・通気性の良い素材がおすすめです。日焼け止めもお忘れなく。';

@@ -1,88 +1,48 @@
-enum BodyPreference { hot, normal, cold }
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-extension BodyPreferenceExt on BodyPreference {
-  String get label {
-    switch (this) {
-      case BodyPreference.hot:
-        return '暑がり';
-      case BodyPreference.normal:
-        return '標準';
-      case BodyPreference.cold:
-        return '寒がり';
-    }
-  }
+part 'user_config.freezed.dart';
+part 'user_config.g.dart';
 
-  /// Geminiプロンプトへの補正説明
-  String get description {
-    switch (this) {
-      case BodyPreference.hot:
-        return '暑がりなので、一般的な提案より薄着気味にしてください。';
-      case BodyPreference.normal:
-        return '体感は標準的です。';
-      case BodyPreference.cold:
-        return '寒がりなので、一般的な提案より厚着気味にしてください。';
-    }
-  }
+@JsonEnum(valueField: 'key')
+enum BodyPreference {
+  hot('hot'),
+  normal('normal'),
+  cold('cold');
 
-  String get key => name; // 'hot' | 'normal' | 'cold'
-
-  static BodyPreference fromKey(String key) {
-    return BodyPreference.values.firstWhere(
-      (e) => e.name == key,
-      orElse: () => BodyPreference.normal,
-    );
-  }
+  const BodyPreference(this.key);
+  final String key;
 }
 
-class UserConfig {
-  final BodyPreference basePreference;
-  final bool hasPollenAllergy;
-  final bool coldAlertEnabled;
-  final bool healthCorrectionEnabled;
-  final int departureHour;
-  final int departureMinute;
-  final int lunchHour;
-  final int lunchMinute;
-  final int returnHour;
-  final int returnMinute;
+extension BodyPreferenceExt on BodyPreference {
+  String get label => switch (this) {
+    BodyPreference.hot => '暑がり',
+    BodyPreference.normal => '標準',
+    BodyPreference.cold => '寒がり',
+  };
 
-  const UserConfig({
-    this.basePreference = BodyPreference.normal,
-    this.hasPollenAllergy = false,
-    this.coldAlertEnabled = true,
-    this.healthCorrectionEnabled = false,
-    this.departureHour = 8,
-    this.departureMinute = 0,
-    this.lunchHour = 12,
-    this.lunchMinute = 0,
-    this.returnHour = 19,
-    this.returnMinute = 0,
-  });
+  /// Gemini プロンプトへの補正説明
+  String get description => switch (this) {
+    BodyPreference.hot => '暑がりなので、一般的な提案より薄着気味にしてください。',
+    BodyPreference.normal => '体感は標準的です。',
+    BodyPreference.cold => '寒がりなので、一般的な提案より厚着気味にしてください。',
+  };
+}
 
-  UserConfig copyWith({
-    BodyPreference? basePreference,
-    bool? hasPollenAllergy,
-    bool? coldAlertEnabled,
-    bool? healthCorrectionEnabled,
-    int? departureHour,
-    int? departureMinute,
-    int? lunchHour,
-    int? lunchMinute,
-    int? returnHour,
-    int? returnMinute,
-  }) {
-    return UserConfig(
-      basePreference: basePreference ?? this.basePreference,
-      hasPollenAllergy: hasPollenAllergy ?? this.hasPollenAllergy,
-      coldAlertEnabled: coldAlertEnabled ?? this.coldAlertEnabled,
-      healthCorrectionEnabled:
-          healthCorrectionEnabled ?? this.healthCorrectionEnabled,
-      departureHour: departureHour ?? this.departureHour,
-      departureMinute: departureMinute ?? this.departureMinute,
-      lunchHour: lunchHour ?? this.lunchHour,
-      lunchMinute: lunchMinute ?? this.lunchMinute,
-      returnHour: returnHour ?? this.returnHour,
-      returnMinute: returnMinute ?? this.returnMinute,
-    );
-  }
+@freezed
+abstract class UserConfig with _$UserConfig {
+  const factory UserConfig({
+    @Default(BodyPreference.normal) BodyPreference basePreference,
+    @Default(false) bool hasPollenAllergy,
+    @Default(true) bool coldAlertEnabled,
+    @Default(false) bool healthCorrectionEnabled,
+    @Default(8) int departureHour,
+    @Default(0) int departureMinute,
+    @Default(12) int lunchHour,
+    @Default(0) int lunchMinute,
+    @Default(19) int returnHour,
+    @Default(0) int returnMinute,
+  }) = _UserConfig;
+
+  factory UserConfig.fromJson(Map<String, dynamic> json) =>
+      _$UserConfigFromJson(json);
 }

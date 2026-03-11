@@ -2,8 +2,64 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/models/user_config.dart';
 import '../../ui/settings/settings_view_model.dart';
+import '../../utils/color.dart';
 
+// ── カラーエイリアス ──
+const _bgCard = AppColors.bgCard;
+const _bgCard2 = AppColors.bgCard2;
+const _accentBlue = AppColors.accentBlue;
+const _accentCyan = AppColors.accentCyan;
+const _accentGreen = AppColors.accentGreen;
+const _accentWarn = AppColors.accentWarn;
+const _ntWarn = AppColors.accentWarn;
+const _textSecondary = AppColors.textSecondary;
+const _textMuted = AppColors.textMuted;
+const _borderColor = AppColors.borderColor;
 
+// ── 共通ウィジェット ──
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle({required this.icon, required this.label});
+  final String icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      '$icon $label',
+      style: const TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+class _SaveButton extends StatelessWidget {
+  const _SaveButton({required this.onTap});
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _accentBlue,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+        ),
+        child: const Text(
+          '設定を保存',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+}
 
 class SettingsView extends ConsumerWidget {
   const SettingsView({super.key});
@@ -12,7 +68,7 @@ class SettingsView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final config = ref.watch(settingsViewModelProvider); //現在の設定を見張る
     final vm = ref.read(settingsViewModelProvider.notifier); //ViewModelを操作する
-    
+
     return Container(
       color: const Color(0xFF0f1117),
       child: SafeArea(
@@ -44,11 +100,11 @@ class SettingsView extends ConsumerWidget {
             ),
 
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 32)
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
                   // ー 基本設定 ー
-                  _ProfikeCard(),
+                  _ProfileCard(),
                   const SizedBox(height: 16),
 
                   // － 体感温度の基本設定 ー
@@ -57,14 +113,14 @@ class SettingsView extends ConsumerWidget {
                     onChanged: vm.setBasePreference, //変更を反映
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // － コンディション設定 ー
                   _ToggleCard(
                     title: '💊 コンディション設定',
                     rows: [
                       _ToggleRow(
                         iconEmoji: '🌸',
-                        iconColor: _accentGreen.overrideWithValues(alpha: 0.14),
+                        iconColor: _accentGreen.withValues(alpha: 0.14),
                         label: '花粉症モード',
                         desc: '花粉症の多い日にマスク・眼鏡を提案',
                         value: config.hasPollenAllergy,
@@ -89,7 +145,7 @@ class SettingsView extends ConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // － 行動スケジュール ー
                   _ScheduleCard(config: config, vm: vm),
                   const SizedBox(height: 16),
@@ -99,19 +155,22 @@ class SettingsView extends ConsumerWidget {
                   const SizedBox(height: 20),
 
                   // － 保存ボタン ー
-                  _SaveButton(onTap: () {
-                    vm.save(); //保存メソッド呼び出し
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: constText('設定を保存しました'),
-                        behavior: SnackBarBehavior.floating,
-                        backgroundColor: _accentBlue,
-                        duration: Duration(seconds: 2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      ), //保存完了の通知
-                    );
-                  }),
+                  _SaveButton(
+                    onTap: () {
+                      vm.save(); //保存メソッド呼び出し
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text('設定を保存しました'),
+                          behavior: SnackBarBehavior.floating,
+                          backgroundColor: _accentBlue,
+                          duration: Duration(seconds: 2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ), //保存完了の通知
+                      );
+                    },
+                  ),
                   const SizedBox(height: 12),
 
                   // ー バージョン ー
@@ -164,17 +223,19 @@ class _ProfileCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                    'マイプロフィール',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                'マイプロフィール',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
               const SizedBox(height: 4),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 3,
+                ),
                 decoration: BoxDecoration(
                   color: _accentBlue.withValues(alpha: 0.18),
                   borderRadius: BorderRadius.circular(20),
@@ -205,7 +266,7 @@ class _SenseCard extends StatelessWidget {
 
   static const _items = [
     (BodyPreference.hot, '🥵', '暑がり'),
-    (BodyPreference.nomal, '😊', '標準'),
+    (BodyPreference.normal, '😊', '標準'),
     (BodyPreference.cold, '🥶', '寒がり'),
   ];
 
@@ -213,7 +274,7 @@ class _SenseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(18),
-      decoration: boxDecoration(
+      decoration: BoxDecoration(
         color: _bgCard,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: _borderColor),
@@ -232,15 +293,12 @@ class _SenseCard extends StatelessWidget {
                   onTap: () => onChanged(pref),
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    margin: const EdgeInsets.symmetric(horisontal: 4),
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     decoration: BoxDecoration(
                       gradient: isSelected
                           ? const LinearGradient(
-                              colors: [
-                                Color(0x2E4F8EF7),
-                                Color(0x1938D9C0),
-                              ],
+                              colors: [Color(0x2E4F8EF7), Color(0x1938D9C0)],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             )
@@ -254,15 +312,13 @@ class _SenseCard extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        Text(emoji,
-                            style: const TextStyle(fontSize: 26)),
+                        Text(emoji, style: const TextStyle(fontSize: 26)),
                         const SizedBox(height: 7),
                         Text(
                           label,
                           style: TextStyle(
                             fontSize: 13,
-                            color:
-                                isSelected ? Colors.white : _textMuted,
+                            color: isSelected ? Colors.white : _textMuted,
                             fontWeight: isSelected
                                 ? FontWeight.bold
                                 : FontWeight.normal,
@@ -274,13 +330,16 @@ class _SenseCard extends StatelessWidget {
                           duration: const Duration(milliseconds: 200),
                           child: const Text(
                             '✓ 選択中',
-                            style:
-                                TextStyle(fontSize: 10, color: _accentCyan, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: _accentCyan,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ),
               );
             }).toList(),
@@ -308,9 +367,9 @@ class _ToggleCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          padding(
-            padding: const EdgeInsets.fromLTRB(220,16, 20, 12),
-            child: _SectionTitle(title),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+            child: _SectionTitle(icon: '💊', label: title),
           ),
           const Divider(height: 1, color: _borderColor),
           ...rows.map((row) => row),
@@ -343,8 +402,7 @@ class _ToggleRow extends StatelessWidget {
         border: Border(bottom: BorderSide(color: _borderColor)),
       ),
       child: SwitchListTile(
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
         secondary: Container(
           width: 36,
           height: 36,
@@ -357,11 +415,14 @@ class _ToggleRow extends StatelessWidget {
         title: Text(
           label,
           style: const TextStyle(
-            fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
         ),
         subtitle: Text(
           desc,
-          style: const TextStyle(fontSize: 12, color: _textMuted, fontSize: 11),
+          style: const TextStyle(fontSize: 11, color: _textMuted),
         ),
         value: value,
         onChanged: onChanged,
@@ -391,9 +452,9 @@ class _ScheduleCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          padding(
+          Padding(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
-            child: _SectionTitle('🕑 行動スケジュール'),
+            child: _SectionTitle(icon: '🕑', label: '行動スケジュール'),
           ),
           const Divider(height: 1, color: _borderColor),
           _ScheduleRow(
@@ -401,21 +462,26 @@ class _ScheduleCard extends StatelessWidget {
             label: '🌅 出発時刻',
             initial: TimeOfDay(
               hour: config.departureHour,
-              minute: config.departureMinute),
-            onChanged: (t) => vm.setDepartureTime(t.hour, t.minute),      
+              minute: config.departureMinute,
+            ),
+            onChanged: (t) => vm.setDepartureTime(t.hour, t.minute),
           ),
           _ScheduleRow(
             dotColor: _accentBlue,
             label: '🌞 昼休み',
-            initial:
-                TimeOfDay(hour: config.lunchHour, minute: config.lunchMinute),
+            initial: TimeOfDay(
+              hour: config.lunchHour,
+              minute: config.lunchMinute,
+            ),
             onChanged: (t) => vm.setLunchTime(t.hour, t.minute),
           ),
           _ScheduleRow(
             dotColor: _accentWarn,
             label: '🌃 帰宅時刻',
             initial: TimeOfDay(
-                hour: config.returnHour, minute: config.returnMinute),
+              hour: config.returnHour,
+              minute: config.returnMinute,
+            ),
             onChanged: (t) => vm.setReturnTime(t.hour, t.minute),
           ),
         ],
@@ -424,12 +490,11 @@ class _ScheduleCard extends StatelessWidget {
   }
 }
 
-
-class _ScheduleRow extends StatelessWidget {
+class _ScheduleRow extends StatefulWidget {
   const _ScheduleRow({
-    required this.dotColor, 
-    required this.label, 
-    required this.initial, 
+    required this.dotColor,
+    required this.label,
+    required this.initial,
     required this.onChanged,
     this.isLast = false,
   });
@@ -482,14 +547,16 @@ class _ScheduleRowState extends State<_ScheduleRow> {
 
   @override
   Widget build(BuildContext context) {
-    final label = _tome.hour.toString().padLeft(2, '0') +
+    final label =
+        _time.hour.toString().padLeft(2, '0') +
         ':' +
         _time.minute.toString().padLeft(2, '0');
     return Container(
       decoration: widget.isLast
           ? null
           : const BoxDecoration(
-            border: Border(bottom: BorderSide(color: _borderColor))),
+              border: Border(bottom: BorderSide(color: _borderColor)),
+            ),
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Row(
         children: [
@@ -497,7 +564,9 @@ class _ScheduleRowState extends State<_ScheduleRow> {
             width: 8,
             height: 8,
             decoration: BoxDecoration(
-                shape: BoxShape.circle, color: widget.dotColor),
+              shape: BoxShape.circle,
+              color: widget.dotColor,
+            ),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -536,6 +605,24 @@ class _ScheduleRowState extends State<_ScheduleRow> {
 // == リンクカード ==
 class _LinkCard extends StatelessWidget {
   const _LinkCard({required this.vm});
-  final String iconEmoji;
+  final SettingsViewModel vm;
 
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: _bgCard,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: _borderColor),
+      ),
+      child: ListTile(
+        title: const Text(
+          'リセット',
+          style: TextStyle(fontSize: 14, color: Colors.redAccent),
+        ),
+        leading: const Icon(Icons.refresh, color: Colors.redAccent),
+        onTap: vm.resetConfig,
+      ),
+    );
+  }
 }
