@@ -6,7 +6,7 @@ import '../../data/sources/weather_api_client.dart';
 
 part 'repository.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class WeatherRepository extends _$WeatherRepository {
   @override
   WeatherData? build() => null;

@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
-import 'home/home_view.dart';
-import 'history/history_view.dart';
-import 'settings/settings_view.dart';
+import 'package:go_router/go_router.dart';
 
-class MainShell extends StatefulWidget {
-  const MainShell({super.key});
+class MainShell extends StatelessWidget {
+  const MainShell({
+    super.key,
+    required this.navigationShell,
+  });
 
-  @override
-  State<MainShell> createState() => _MainShellState();
-}
-
-class _MainShellState extends State<MainShell> {
-  int _currentIndex = 0;
-
-  static const List<Widget> _pages = [HomeView(), HistoryView(), SettingsView()];
+  final StatefulNavigationShell navigationShell;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _pages),
+      body: navigationShell,
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (i) => setState(() => _currentIndex = i),
+        selectedIndex: navigationShell.currentIndex,
+        onDestinationSelected: (i) => navigationShell.goBranch(
+          i,
+          initialLocation: i == navigationShell.currentIndex,
+        ),
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home_rounded), label: 'ホーム'),
           NavigationDestination(

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/sources/local_storage_service.dart';
-import 'ui/main_shell.dart';
+import 'router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +21,7 @@ class WeTheWearApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'WeTheWear',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -32,7 +32,7 @@ class WeTheWearApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'NotoSansJP',
       ),
-      home: const MainShell(),
+      routerConfig: appRouter,
     );
   }
 }

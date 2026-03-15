@@ -6,12 +6,12 @@ part of 'repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$weatherRepositoryHash() => r'08986695a3094f86d35c00390ef665c2c5ec090c';
+String _$weatherRepositoryHash() => r'208d1fd14c6b431421a878e709714d796dce0fa6';
 
 /// See also [WeatherRepository].
 @ProviderFor(WeatherRepository)
 final weatherRepositoryProvider =
-    AutoDisposeNotifierProvider<WeatherRepository, WeatherData?>.internal(
+    NotifierProvider<WeatherRepository, WeatherData?>.internal(
       WeatherRepository.new,
       name: r'weatherRepositoryProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,6 +21,6 @@ final weatherRepositoryProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$WeatherRepository = AutoDisposeNotifier<WeatherData?>;
+typedef _$WeatherRepository = Notifier<WeatherData?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -24,12 +24,16 @@ abstract class HomeState with _$HomeState {
 @riverpod
 class HomeViewModel extends _$HomeViewModel {
   @override
-  HomeState build() => const HomeState(
-    weather: null,
-    advice: null,
-    isLoading: false,
-    error: null,
-  );
+  HomeState build() {
+    // 初回レンダリング直後にデータを取得する
+    Future.microtask(() => loadWeatherAndAdvice());
+    return const HomeState(
+      weather: null,
+      advice: null,
+      isLoading: true,
+      error: null,
+    );
+  }
 
   Future<void> loadWeatherAndAdvice() async {
     state = state.copyWith(isLoading: true, error: null);

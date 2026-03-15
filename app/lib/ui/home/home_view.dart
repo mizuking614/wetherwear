@@ -4,24 +4,11 @@ import '../../data/models/feedback_record.dart';
 import '../../data/models/weather/model.dart';
 import '../../ui/home/home_view_model.dart';
 
-class HomeView extends ConsumerStatefulWidget {
+class HomeView extends ConsumerWidget {
   const HomeView({super.key});
 
   @override
-  ConsumerState<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends ConsumerState<HomeView> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(homeViewModelProvider.notifier).loadWeatherAndAdvice();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(homeViewModelProvider);
     final cs = Theme.of(context).colorScheme;
 
