@@ -38,7 +38,7 @@ class WeatherApiClient {
           'weather_code',
         ].join(','),
         'hourly': ['apparent_temperature', 'weather_code'].join(','),
-        'timezone': 'Asia/Tokyo',
+        'timezone': 'auto',
         'forecast_days': '1',
       },
     );
